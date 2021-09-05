@@ -6,12 +6,20 @@ public CheckPlayer(playerid)
 	TogglePlayerControllable(playerid, false);
 	SetPlayerCamera(playerid);
 	SetPlayerColor(playerid, 0xFFFFFFFF);
-	SetSpawnInfo(playerid, NO_TEAM, PlayerInfo[playerid][pSkin], 485.4370, -14.0601, 1000.6797, 268.1323, 0, 0, 0, 0, 0, 0);
+	//SetSpawnInfo(playerid, NO_TEAM, PlayerInfo[playerid][pSkin], 485.4370, -14.0601, 1000.6797, 268.1323, 0, 0, 0, 0, 0, 0);
 	SetPlayerInterior(playerid, 17);
 	WantedTag[playerid] = CreateDynamic3DTextLabel("Loading nametag...", 0xFFFFFFFF, 0.0, 0.0, -1, 23, .attachedplayer = playerid, .testlos = 1);
-	SetPlayerCameraPos(playerid, 487.6031, -10.0267, 1003.1234);
-	SetPlayerCameraLookAt(playerid, 487.6129, -9.0282, 1003.0244);
 	
+	SendClientMessage(playerid, 0x3436ADFF, "{72A8D4}Welcome to Diego's Cops and Robbers!");
+	SendClientMessage(playerid, 0x3436ADFF, "------------------------------------------------------------------------------------------");
+	SendClientMessage(playerid, 0x3436ADFF, "1. {72A8D4}This is a cnr server, please stay within decent realms of roleplay/cnr.");
+	SendClientMessage(playerid, 0x3436ADFF, "2. {72A8D4}Please contact a staff member if you have any questions by using the command /support, or just type /help");
+	SendClientMessage(playerid, 0x3436ADFF, "3. {72A8D4}Please do not deathmatch, carkill, flame or hack on this server, all are punishable.");
+	SendClientMessage(playerid, 0x3436ADFF, "4. {72A8D4}Treat others as you would want to be treated, you will enjoy playing more!");
+	SendClientMessage(playerid, 0x3436ADFF, "5. {72A8D4}Our full rules can be found at www.realdiegopoptart.ml or /rules");
+ 	SendClientMessage(playerid, 0x3436ADFF, "------------------------------------------------------------------------------------------");
+
+
     new welmsg[16];
 	switch(random(4))
 	{
@@ -31,7 +39,7 @@ public CheckPlayer(playerid)
 	}
 	else // If there are no rows, we need to show the register dialog!
 	{	
-		format(string, sizeof(string), "{FFFFFF}%s, {47d95f}%s{FFFFFF} Welcome to Phazer Cops n' Robbers.\nSimply type a password below in order to register.", welmsg, GetPlayerNameEx(playerid));
+		format(string, sizeof(string), "{FFFFFF}%s, {47d95f}%s{FFFFFF} Welcome to Diego's Cops and Robbers.\nSimply type a password below in order to register.", welmsg, GetPlayerNameEx(playerid));
 		Dialog_Show(playerid, DIALOG_REGISTER, DIALOG_STYLE_PASSWORD, "Register", string, "Register", "Exit");
 	}
 	return 1;
@@ -94,13 +102,12 @@ public SavePlayerPos(playerid)
 	if(PlayerInfo[playerid][pLogged])
 	{
 		GetPlayerPos(playerid, PlayerInfo[playerid][pPos_x], PlayerInfo[playerid][pPos_y], PlayerInfo[playerid][pPos_z]);
-		mysql_format(Database, query, sizeof(query), "UPDATE users SET pos_x = %f WHERE acc_id = %i", PlayerInfo[playerid][pPos_x], PlayerInfo[playerid][pID]);
-		mysql_tquery(Database, query);// X
-		mysql_format(Database, query, sizeof(query), "UPDATE users SET pos_y = %f WHERE acc_id = %i", PlayerInfo[playerid][pPos_y], PlayerInfo[playerid][pID]);
-		mysql_tquery(Database, query);// Y
-		mysql_format(Database, query, sizeof(query), "UPDATE users SET pos_z = %f WHERE acc_id = %i", PlayerInfo[playerid][pPos_z], PlayerInfo[playerid][pID]);
-		mysql_tquery(Database, query);// Z
-		SetTimerEx("SavePlayerPos", 6500, false, "i", playerid);
+		mysql_format(Database, querystr, sizeof(querystr), "UPDATE users SET pos_x = %f WHERE acc_id = %i", PlayerInfo[playerid][pPos_x], PlayerInfo[playerid][pID]);
+		mysql_tquery(Database, querystr);// X
+		mysql_format(Database, querystr, sizeof(querystr), "UPDATE users SET pos_y = %f WHERE acc_id = %i", PlayerInfo[playerid][pPos_y], PlayerInfo[playerid][pID]);
+		mysql_tquery(Database, querystr);// Y
+		mysql_format(Database, querystr, sizeof(querystr), "UPDATE users SET pos_z = %f WHERE acc_id = %i", PlayerInfo[playerid][pPos_z], PlayerInfo[playerid][pID]);
+		mysql_tquery(Database, querystr);// Z
 	}
 	return 1;
 }

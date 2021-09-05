@@ -10,7 +10,9 @@ Diego's COPS AND ROBBERS - Started on 5/21/2021 11:25 PM
 #include <easyDialog>
 #include <mSelection>
 #include <foreach>
+#include <discord-connector>
 #include <afk>
+#include <bcrypt>
 // ------Modular-----
 
 #include "./modu/defines.pwn"
@@ -18,21 +20,21 @@ Diego's COPS AND ROBBERS - Started on 5/21/2021 11:25 PM
 #include "./modu/stock.pwn"
 #include "./modu/functions.pwn"
 #include "./modu/sql/load.pwn"
-#include "./modu/cmds/dialog.pwn"
+#include "./modu/dialog.pwn"
 #include "./modu/cmds/player.pwn"
 #include "./modu/cmds/admin.pwn"
 
 // -----End of Modular------
 
-#define MYSQL_HOSTNAME		"localhost"
-#define MYSQL_USERNAME		"root"
-#define MYSQL_PASSWORD		""
-#define MYSQL_DATABASE		"phazercnr"
+#define MYSQL_HOSTNAME	"localhost"
+#define MYSQL_USERNAME	"root"
+#define MYSQL_PASSWORD	""
+#define MYSQL_DATABASE	"phazercnr"
 
 main()
 {
 	print("\n----------------------------------");
-	print(" Diego's CNR | Version V1.0.0");
+	print(" Diego's Playground | Version V1.0.0");
 	print("----------------------------------\n");
 }
 
@@ -41,6 +43,7 @@ public OnGameModeInit()
 	new MySQLOpt: option_id = mysql_init_options();
 	mysql_set_option(option_id, AUTO_RECONNECT, true); // it automatically reconnects when loosing connection to mysql server
 	Database = mysql_connect(MYSQL_HOSTNAME, MYSQL_USERNAME, MYSQL_PASSWORD, MYSQL_DATABASE, option_id); // AUTO_RECONNECT is enabled for this connection handle only
+	print("[!] MySQL Server connection has been connected. No need to worry for now :D [!]");
 	if (Database == MYSQL_INVALID_HANDLE || mysql_errno(Database) != 0)
 	{
 		print("[!] MySQL Server connection has failed [!]");
@@ -48,11 +51,14 @@ public OnGameModeInit()
 		return 1;
 	}
 
+	if(_:g_DeveloperChannel == 0)
+		g_DeveloperChannel = DCC_FindChannelById("868697833887367198");
+
 	//Timers
 	SetTimer("UpdateWantedTag", 1500, true);
-	SetTimer("GetPlayerPosEx", 10000, true);
 
-	SetGameModeText("realdiegopoptart V1.0.0 (CNR/RPG)");
+	ShowPlayerMarkers(PLAYER_MARKERS_MODE_STREAMED);
+	SetGameModeText("realdiegopoptart Ver. 0.0.1");
 	AddPlayerClass(0, 1958.3783, 1343.1572, 15.3746, 269.1425, 0, 0, 0, 0, 0, 0);
 	return 1;
 }
@@ -64,12 +70,7 @@ public OnGameModeExit()
 
 public OnPlayerRequestClass(playerid, classid)
 {
-	if(PlayerInfo[playerid][pKnocked] == 1)
-	{
-		ShowPlayerDialog(playerid, DIALOG_DEATH, DIALOG_STYLE_LIST, "Choose your spawn", "Random Hospital\nLocation\nJob Spot\n", "Select", "button2[]");
-		PlayerInfo[playerid][pKnocked] = 0;
-	}
-	else if(PlayerInfo[playerid][pLogged] == 0)
+	if(PlayerInfo[playerid][pLogged] == 0)
 	{
 	 	TogglePlayerSpectating(playerid, true);
 		SetSpawnInfo(playerid, NO_TEAM, PlayerInfo[playerid][pSkin], 485.4370, -14.0601, 1000.6797, 268.1323, 0, 0, 0, 0, 0, 0);
@@ -84,8 +85,8 @@ public OnPlayerConnect(playerid)
 {
 	GetPlayerIp(playerid, PlayerIP[playerid], 16);
 	//SetPlayerColor(playerid, PlayerColors[playerid % sizeof PlayerColors]); // here incase
-	mysql_format(Database, query, sizeof(query), "SELECT `acc_password`, `acc_id` FROM `users` WHERE `acc_username` = '%e' LIMIT 0, 1", GetPlayerNameEx(playerid));
-	mysql_tquery(Database, query, "CheckPlayer", "i", playerid);
+	mysql_format(Database, querystr, sizeof(querystr), "SELECT `acc_password`, `acc_id` FROM `users` WHERE `acc_username` = '%e' LIMIT 0, 1", GetPlayerNameEx(playerid));
+	mysql_tquery(Database, querystr, "CheckPlayer", "i", playerid);
 	UnloadPlayer(playerid);
 	return 1;
 }
@@ -94,8 +95,8 @@ public OnPlayerDisconnect(playerid, reason)
 {
 	GetPlayerPos(playerid, PlayerInfo[playerid][pPos_x], PlayerInfo[playerid][pPos_y], PlayerInfo[playerid][pPos_z]);
 
-	mysql_format(Database, query, sizeof(query), "UPDATE `users` SET `pos_x`= %f, `pos_y`= %f, `pos_z`= %f WHERE `acc_id`= %d", PlayerInfo[playerid][pPos_x], PlayerInfo[playerid][pPos_y], PlayerInfo[playerid][pPos_z], PlayerInfo[playerid][pID]);
-	mysql_tquery(Database, query);
+	mysql_format(Database, querystr, sizeof(querystr), "UPDATE `users` SET `pos_x`= %f, `pos_y`= %f, `pos_z`= %f WHERE `acc_id`= %d", PlayerInfo[playerid][pPos_x], PlayerInfo[playerid][pPos_y], PlayerInfo[playerid][pPos_z], PlayerInfo[playerid][pID]);
+	mysql_tquery(Database, querystr);
 
     if(IsValidDynamic3DTextLabel(WantedTag[playerid]))
             DestroyDynamic3DTextLabel(WantedTag[playerid]);
@@ -145,8 +146,8 @@ public OnPlayerDeath(playerid, killerid, reason)
 	SendClientMessageEx(killerid, COLOR_GREEN, "You have been suspected for {FFFFFF}Murder");
 	IncreaseWantedLevel(killerid);
 
-	mysql_format(Database, query, sizeof(query), "UPDATE users SET wanted = %i WHERE acc_id = %i", PlayerInfo[killerid][pWanted], PlayerInfo[killerid][pID]);
-	mysql_tquery(Database, query);
+	mysql_format(Database, querystr, sizeof(querystr), "UPDATE users SET wanted = %i WHERE acc_id = %i", PlayerInfo[killerid][pWanted], PlayerInfo[killerid][pID]);
+	mysql_tquery(Database, querystr);
 	return 1;
 }
 

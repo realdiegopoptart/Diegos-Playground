@@ -1,3 +1,5 @@
+new DCC_Channel:g_DeveloperChannel;
+
 
 enum PlayerData
 {
@@ -30,7 +32,7 @@ new
 	PlayerIP[MAX_PLAYERS][17]	
 ;
 
-new query[1024];
+new querystr[1024];
 new Text3D:WantedTag[MAX_PLAYERS];
 
 enum
