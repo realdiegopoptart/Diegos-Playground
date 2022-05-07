@@ -29,7 +29,7 @@ Diego's COPS AND ROBBERS - Started on 5/21/2021 11:25 PM
 #define MYSQL_HOSTNAME	"localhost"
 #define MYSQL_USERNAME	"root"
 #define MYSQL_PASSWORD	""
-#define MYSQL_DATABASE	"phazercnr"
+#define MYSQL_DATABASE	"diegoplaygroundphazercnr"
 
 main()
 {
