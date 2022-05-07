@@ -11,13 +11,6 @@ public CheckPlayer(playerid)
 	WantedTag[playerid] = CreateDynamic3DTextLabel("Loading nametag...", 0xFFFFFFFF, 0.0, 0.0, -1, 23, .attachedplayer = playerid, .testlos = 1);
 	
 	SendClientMessage(playerid, 0x3436ADFF, "{72A8D4}Welcome to Diego's Cops and Robbers!");
-	SendClientMessage(playerid, 0x3436ADFF, "------------------------------------------------------------------------------------------");
-	SendClientMessage(playerid, 0x3436ADFF, "1. {72A8D4}This is a cnr server, please stay within decent realms of roleplay/cnr.");
-	SendClientMessage(playerid, 0x3436ADFF, "2. {72A8D4}Please contact a staff member if you have any questions by using the command /support, or just type /help");
-	SendClientMessage(playerid, 0x3436ADFF, "3. {72A8D4}Please do not deathmatch, carkill, flame or hack on this server, all are punishable.");
-	SendClientMessage(playerid, 0x3436ADFF, "4. {72A8D4}Treat others as you would want to be treated, you will enjoy playing more!");
-	SendClientMessage(playerid, 0x3436ADFF, "5. {72A8D4}Our full rules can be found at www.realdiegopoptart.ml or /rules");
- 	SendClientMessage(playerid, 0x3436ADFF, "------------------------------------------------------------------------------------------");
 
 
     new welmsg[16];
